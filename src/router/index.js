@@ -2,14 +2,14 @@ import router from './routers'
 import store from '@/store'
 import Config from '@/settings'
 import NProgress from 'nprogress' // progress bar
-import 'nprogress/nprogress.css'// progress bar style
+import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // getToken from cookie
 import { buildMenus } from '@/api/system/menu'
 import { filterAsyncRouter } from '@/store/modules/permission'
 
-NProgress.configure({ showSpinner: false })// NProgress Configuration
+NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login']// no redirect whitelist
+const whiteList = ['/login', '/register'] // no redirect whitelist
 
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
@@ -21,6 +21,9 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' })
       NProgress.done()
+    } else if (to.path === '/register') { // Add this condition for register route
+      next({ path: '/register' })
+      NProgress.done()
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetInfo').then(() => { // 拉取user_info
@@ -31,7 +34,7 @@ router.beforeEach((to, from, next) => {
             location.reload() // 为了重新实例化vue-router对象 避免bug
           })
         })
-      // 登录时未拉取 菜单，在此处拉取
+        // 登录时未拉取 菜单，在此处拉取
       } else if (store.getters.loadMenus) {
         // 修改成false，防止死循环
         store.dispatch('updateLoadMenus')
