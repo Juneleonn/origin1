@@ -1,5 +1,5 @@
 <template>
-  <!--  改-->
+  <!--  改了-->
   <div class="login" :style="'background-image:url('+ Background +');'">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
       <h3 class="title">
